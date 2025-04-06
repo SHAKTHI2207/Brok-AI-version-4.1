@@ -6,6 +6,7 @@ import re
 import torch
 import random
 import json
+import time
 from datetime import datetime
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 import streamlit as st
@@ -54,7 +55,7 @@ def load_model():
 def content_mod(text):
     offensive = ["fuck off", "mother fucker", "bitch", "idiot", "stupid", "dumb"]
     for w in offensive:
-        if re.search(rf"\\b{re.escape(w)}\\b", text, flags=re.IGNORECASE):
+        if re.search(rf"\b{re.escape(w)}\b", text, flags=re.IGNORECASE):
             return "Sir, I’m programmed for precision and decorum. Try a less colorful phrasing."
     return text
 
@@ -103,12 +104,12 @@ def handle_persona_switch(user_input):
             return f"🎭 Persona switched to {persona}."
     return None
 
-def get_prompt(user_input):
+def get_prompt(user_input, use_case=None):
     facts = "\n".join(random.sample(marketing_facts, 2))
     return (
         f"You are Brok AI, a marketing strategist with persona {active_persona}. "
         f"Speak clearly, creatively, and persuasively. Avoid fluff.\n\n"
-        f"{facts}\nUser: {user_input}\nAssistant:"
+        f"{facts}\nUse Case: {use_case or 'General'}\nUser: {user_input}\nAssistant:"
     )
 
 def load_memory():
@@ -134,26 +135,33 @@ def log_chat(prompt, response):
 
 # 🚀 Streamlit UI
 st.set_page_config(page_title="Brok AI v4.1", page_icon="🤖")
-st.title("🤖 Brok AI v4.1 – Your Meme-Loving Marketing Assistant")
-st.markdown("Built by **Shakthi** | Powered by Mistral-7B | Persona-Driven & Marketing-Packed")
+st.markdown("<h1 style='text-align:center;'>🤖 Brok AI v4.1</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align:center;'>Built by <b>Shakthi</b> | Powered by Mistral-7B | Persona-Driven & Marketing-Packed</p>", unsafe_allow_html=True)
 
 if "chat_log" not in st.session_state:
     st.session_state.chat_log = []
 
 load_model()
 
+use_case = st.selectbox("🎯 Select a use case for Brok:", [
+    "Ad Copy", "Slogan / Tagline", "Social Media Caption", "Email Campaign", "Creative Pitch", "Product Naming", "General Prompt"
+])
+
 user_input = st.text_input("💬 Ask Brok something... (Add persona like [Ad Guru], [Meme Generator], etc.)")
 
 if user_input:
     persona_note = handle_persona_switch(user_input)
-    prompt = get_prompt(user_input)
-    response = generate_response(prompt)
-    styled = stylize_response(response)
+    
+    with st.spinner("🤖 BROK is thinking..."):
+        time.sleep(2)  # simulate thought delay
+        prompt = get_prompt(user_input, use_case)
+        response = generate_response(prompt)
+        styled = stylize_response(response)
+        st.session_state.chat_log.append((user_input, styled))
+        log_chat(user_input, styled)
 
-    st.session_state.chat_log.append((user_input, styled))
-    log_chat(user_input, styled)
-
-# Show chat history
+# Display chat history
+st.markdown("---")
 for u, a in reversed(st.session_state.chat_log):
     st.markdown(f"**You:** {u}")
     st.markdown(f"{a}")
