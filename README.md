@@ -1,5 +1,5 @@
 # Brok-AI-version-4.1
-Say hello to Brok AI v4.1 – My Personal Marketing Assistant 🤖
+Say hello to Brok AI v4.1 – Your Personal Marketing Assistant 🤖
 ---
 # 🤖 Brok AI v4.1 – The Marketing Intelligence Chatbot
 
