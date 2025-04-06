@@ -1,0 +1,60 @@
+
+# 🛠️ The Evolution & Struggles Behind Brok AI
+
+Building **Brok AI** wasn’t just a technical project — it was a creative hustle, a journey through limitations, learning curves, and constant iterations. From small-scale models to powerful instruction-tuned LLMs, every phase came with its own battle. Here’s how Brok evolved and what went behind the scenes:
+
+---
+
+## 🔹 Phase 1: GPT-2 Small – The Humble Beginning
+
+- **Initial choice**: GPT-2 small (117M) for testing basic conversational flows.
+- **Struggles**:
+  - **Limited context memory** made it hard to sustain meaningful marketing-oriented conversations.
+  - Frequent **technical issues** like unstable response formats and abrupt outputs.
+  - Responses lacked creativity and sounded robotic — not suited for a bot with personality.
+
+---
+
+## 🔹 Phase 2: GPT-2 Large – Slightly Better, But Still Lacking
+
+- **Upgraded to**: GPT-2 Large for more tokens and better fluency.
+- **Challenges encountered**:
+  - Faced **tokenization issues** and **temperature/k-sampling inconsistencies**, which caused fluctuating response quality.
+  - Still couldn’t generate **strategic-level marketing content** — lacked persuasive tone.
+  - Struggled with **content moderation** and keeping outputs brand-safe for real-time usage.
+
+---
+
+## 🔹 Phase 3: GPT-J 6B – A Bigger Brain, But Still Flawed
+
+- **Model shift**: GPT-J 6B to try unlocking deeper coherence and reasoning.
+- **What went wrong**:
+  - While the responses were **logically richer**, the **content often became bloated or misaligned**.
+  - Encountered **over-generation** problems — responses would go off-topic or become too verbose.
+  - **Latency and memory issues** began popping up on Hugging Face Spaces.
+  - Overall, **not production-ready** for a consistent marketing experience.
+
+---
+
+## 🔹 Phase 4: Mistral-7B Instruct – The Real Game Changer
+
+- **Final shift**: `mistralai/Mistral-7B-Instruct-v0.1`
+- **Initial blocker**:
+  - Hugging Face’s **gated access** error (`401 Client Error`) blocked early implementation.
+  - Required proper **authentication using HF tokens** and environment secret management.
+- **Breakthroughs**:
+  - With the help of **4-bit quantization (BitsAndBytesConfig)**, we optimized memory usage and deployed efficiently.
+  - This model finally delivered:
+    - Strategic marketing tone.
+    - Persona-switching capability.
+    - Faster response time and better retention of instruction context.
+  - Implemented **content filtering**, **response formatting**, and **persona tone adaptation**.
+
+---
+
+### 💬 Personal Reflection – by Shakthi
+
+*Brok AI started as a side experiment using GPT-2, but I quickly realized the limitations and outgrew each model phase. From tokenization errors to unpredictable temperature sampling to the frustration of vague, misaligned responses — it was a constant cycle of test, fail, tweak, and retry. Only with Mistral-7B did Brok finally become what I envisioned: a high-functioning, tone-flexible, marketing-focused conversational AI.*
+
+---
+
