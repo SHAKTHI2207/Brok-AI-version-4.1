@@ -64,6 +64,7 @@ RAM	At least 16 GB recommended
 - `README.md` → Overview & journey
 - `requirements.txt` → Required dependencies
 - `making_brok_ai.txt` → Dev struggles + model transition doc
+- appvstreamlit.py → Main code + Streamlit Interface 
 - '
 
 ---
