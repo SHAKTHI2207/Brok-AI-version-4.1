@@ -1,0 +1,17 @@
+
+import os
+import re
+import torch
+import random
+import json
+from datetime import datetime
+import gradio as gr
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+## Make sure Mistral 7B model is loaded ### 
+token can be created on Huggingface spaces.
+
+if fails loading the dependencies make sure you install them properly or update your notebook and make sure your libararies are updated 
+run on T4 gpu for testing Brok for limted time purposes 
+
+
+##### end of note ####################
