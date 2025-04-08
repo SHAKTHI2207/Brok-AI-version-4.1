@@ -64,7 +64,8 @@ RAM	At least 16 GB recommended
 - `README.md` → Overview & journey
 - `requirements.txt` → Required dependencies
 - `making_brok_ai.txt` → Dev struggles + model transition doc
-- appvstreamlit.py → Main code + Streamlit Interface 
+- appvstreamlit.py → Main code + Streamlit Interface
+- Webtesting_on_Gradio_demo.py → Main code + Gradio UI demo can be used in a colab sheet to deploy brok locally on server 
 - '
 
 ---
