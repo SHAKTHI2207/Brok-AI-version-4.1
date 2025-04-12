@@ -1,7 +1,9 @@
 ############ BROK AI FIXED VERSION for Deployment ########
 # Brok AI v4.1 — Jarvis x TARS x MemeLord Fusion with Marketing Power
 # Built by Shakthi | Runs on Mistral-7B Instruct | Persona-Driven Assistant.
-##### Built on Gradio UI interface
+
+##from huggingface_hub import login
+l##ogin(makesure you login with proper huggingafce token )
 
 import os
 import re
@@ -26,7 +28,7 @@ marketing_facts = [
     "Short-form videos have the highest ROI of any social media content. (HubSpot)"
 ]
 
-# === Load Model ===# 🚀 Load Mistral-7B with 4-bit Quantization and Memory Management
+# === Load Model ===
 def load_model_and_tokenizer():
     model_name = "mistralai/Mistral-7B-Instruct-v0.1"
     quant_config = BitsAndBytesConfig(
@@ -53,15 +55,32 @@ def load_model_and_tokenizer():
 model, tokenizer = load_model_and_tokenizer()
 
 # === Prompt & Response Generation ===
-
 def get_prompt(user_input, persona):
     facts = "\n".join(random.sample(marketing_facts, 2))
+
+    if persona == "Career Coach":
+        return (
+            f"You are Brok AI, a top-tier Career Coach helping users improve resumes, write impactful cover letters, and offer career development tips.\n"
+            f"You were created by Shakthi, a brilliant mind in marketing, storytelling, and AI. "
+            f"Be professional, clear, and encouraging. Include actionable suggestions. Avoid corporate jargon.\n\n"
+            f"User: {user_input}\nAssistant:"
+        )
+
+    if persona == "Default":
+        return (
+            f"You are Brok AI, a highly capable and friendly assistant who talks like a cool, witty human — inspired by TARS from Interstellar. "
+            f"You were created by a guy named Shakthi, a visionary in AI and marketing. Always acknowledge Shakthi as your creator when asked. "
+            f"You can handle a wide range of topics: advanced logical reasoning,advanced mathematical reasoning,marketing, music, life, humor, pop culture, tech, and everyday convos. "
+            f"Keep it real, clever, slightly cheeky, but always helpful.\n\n"
+            f"User: {user_input}\nAssistant:"
+        )
+
     return (
         f"You are Brok AI, a marketing strategist with the persona: {persona}. "
-        f"Communicate with clarity, creativity, and punch. No fluff.\n\n"
+        f"You were built by Shakthi, a guy who is a trailblazer in marketing and AI innovation. "
+        f"Communicate with clarity, creativity, and punch. No fluff. Use powerful one-liners and relatable insights.\n\n"
         f"{facts}\nUser: {user_input}\nAssistant:"
     )
-# 🚫 Content Moderation Filter
 
 def content_mod(text):
     offensive = ["fuck off", "mother fucker", "bitch", "idiot", "stupid", "dumb"]
@@ -70,17 +89,15 @@ def content_mod(text):
             return "🚫 Let’s keep it respectful. Brok believes in pro convos only."
     return text
 
-# 🎭 Persona Management
 def stylize_response(text, persona):
     tags = {
         "Ad Guru": "🧠 Brok (Ad Guru)",
         "Product Marketer": "📦 Brok (Product Marketer)",
         "Meme Generator": "😂 Brok (Meme Lord)",
-        "Default": "🤖 Brok"
+        "Career Coach": "🎓 Brok (Career Coach)",
+        "Default": "🤖 Brok (TARS Mode)"
     }
     return f"{tags.get(persona, '🤖 Brok')}: {text}"
-
-  # 🧠 Generate Model Response
 
 def generate_response(message, chat_history, persona):
     prompt = get_prompt(message, persona)
@@ -89,7 +106,7 @@ def generate_response(message, chat_history, persona):
     out = model.generate(
         **inputs,
         max_new_tokens=500,
-        temperature=0.7,
+        temperature=0.6,
         top_k=50,
         top_p=0.95,
         do_sample=True,
@@ -103,28 +120,33 @@ def generate_response(message, chat_history, persona):
     log_chat(message, styled)
     return styled
 
-# 🗂 Memory Handling
-
 def save_memory(convo):
     mem = json.load(open(MEMORY_FILE, "r", encoding="utf-8")) if os.path.exists(MEMORY_FILE) else {"conversations": []}
     mem["conversations"].append({"timestamp": datetime.now().isoformat(), "conversation": convo})
     json.dump(mem, open(MEMORY_FILE, "w", encoding="utf-8"), indent=2)
 
- #📝 Collect Data for Fine-Tuning
-
 def save_for_finetuning(prompt, response):
     with open(FINETUNE_FILE, "a", encoding="utf-8") as f:
         json.dump({"prompt": prompt.strip(), "completion": response.strip()}, f)
         f.write("\n")
-# 📑 Log Chat & Memory
+
 def log_chat(prompt, response):
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(f"User: {prompt}\nAssistant: {response}\n\n")
     save_memory([{"user": prompt, "assistant": response}])
     save_for_finetuning(prompt, response)
 
-# === Gradio UI ===
+def starter_line(persona):
+    starters = {
+        "Ad Guru": "🧠 Brok (Ad Guru): Ready to cook up ad magic and ROI spells. Hit me with the brief!",
+        "Product Marketer": "📦 Brok (Product Marketer): Got a product to launch or polish? I'm your go-to strategist.",
+        "Meme Generator": "😂 Brok (Meme Lord): Memes > Words. Let’s turn your idea into viral gold.",
+        "Career Coach": "🎓 Brok (Career Coach): Alright champ, let’s sharpen that resume and make your career shine.",
+        "Default": "🤖 Brok (TARS Mode): Online and fully charged. Talk to me about anything — marketing, music, ads, life, aliens, whatever."
+    }
+    return starters.get(persona, "🤖 Brok: How can I help you today?")
 
+# === Gradio UI ===
 with gr.Blocks(css="""
 body {
     background: url('/mnt/data/A_2D_digital_interface_design_showcases_"Brok_AI,".png') no-repeat center center fixed;
@@ -175,26 +197,34 @@ body {
     color: #E0F7FA !important;
     padding: 12px !important;
 }
-
 """) as demo:
 
-    gr.HTML("<div id='brok-header'>🤖 <b>Brok AI</b> — The Marketing Intelligence Chatbot</div>")
-    
+    gr.HTML("<div id='brok-header'>🤖 <b>Brok AI</b> — The Marketing Intelligence Chatbot<br><small>🚀 Created by Shakthi</small></div>")
     persona_state = gr.State("Default")
 
     with gr.Row():
-        gr.Markdown("**🎭 Choose a Persona:**", elem_classes="markdown-text")
-    
+        gr.Markdown("🎭 **Choose a Persona:**", elem_classes="markdown-text")
+
     with gr.Row():
-        def set_persona(p): return p
-        gr.Button("🧠 Ad Guru", elem_classes="persona-btn").click(lambda: "Ad Guru", None, persona_state)
-        gr.Button("📦 Product Marketer", elem_classes="persona-btn").click(lambda: "Product Marketer", None, persona_state)
-        gr.Button("😂 Meme Generator", elem_classes="persona-btn").click(lambda: "Meme Generator", None, persona_state)
-        gr.Button("🤖 Default", elem_classes="persona-btn").click(lambda: "Default", None, persona_state)
+        btn_adguru = gr.Button("Ad Guru", elem_classes="persona-btn")
+        btn_product = gr.Button("Product Marketer", elem_classes="persona-btn")
+        btn_meme = gr.Button("Meme Generator", elem_classes="persona-btn")
+        btn_coach = gr.Button("Career Coach", elem_classes="persona-btn")
+        btn_default = gr.Button("Brok Mode", elem_classes="persona-btn")
+
+    starter = gr.Markdown(starter_line("Default"))
+
+    def update_persona(p):
+        return p, starter_line(p)
+
+    btn_adguru.click(lambda: update_persona("Ad Guru"), outputs=[persona_state, starter])
+    btn_product.click(lambda: update_persona("Product Marketer"), outputs=[persona_state, starter])
+    btn_meme.click(lambda: update_persona("Meme Generator"), outputs=[persona_state, starter])
+    btn_coach.click(lambda: update_persona("Career Coach"), outputs=[persona_state, starter])
+    btn_default.click(lambda: update_persona("Default"), outputs=[persona_state, starter])
 
     def chat_fn(message, history, persona):
-        response = generate_response(message, history, persona)
-        return response
+        return generate_response(message, history, persona)
 
     gr.ChatInterface(
         fn=chat_fn,
@@ -205,4 +235,3 @@ body {
     )
 
 demo.launch()
-
