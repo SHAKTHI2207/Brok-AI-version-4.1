@@ -1,9 +1,8 @@
-
 # 🛠️ The Evolution & Struggles Behind Brok AI
 
 Building **Brok AI** wasn’t just a technical project — it was a creative hustle, a journey through limitations, learning curves, and constant iterations. From small-scale models to powerful instruction-tuned LLMs, every phase came with its own battle. Here’s how Brok evolved and what went behind the scenes:
 
----
+-------
 
 ## 🔹 Phase 1: GPT-2 Small – The Humble Beginning
 
@@ -13,7 +12,7 @@ Building **Brok AI** wasn’t just a technical project — it was a creative hus
   - Frequent **technical issues** like unstable response formats and abrupt outputs.
   - Responses lacked creativity and sounded robotic — not suited for a bot with personality.
 
----
+-----------
 
 ## 🔹 Phase 2: GPT-2 Large – Slightly Better, But Still Lacking
 
