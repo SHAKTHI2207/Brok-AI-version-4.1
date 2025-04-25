@@ -74,6 +74,7 @@ RAM	At least 16 GB recommended
 ```bash
 pip install -r requirements.txt
 python app.py
+updatedscrpit.py--- conisits changes comtted to 4.2 model
 ```
 
 ---
